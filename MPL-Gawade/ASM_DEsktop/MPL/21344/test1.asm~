@@ -1,0 +1,48 @@
+section .data
+ msg db "Sum of numbers is"
+ len equ $-msg
+ n1 db 10h
+ n2 db 15h
+ count db 8h
+
+section .bss
+ sum resb 20
+ length resb 20
+
+section .text
+global _start 
+_start:
+
+ mov al,byte[n1]
+ add al,byte[n2]
+ mov esi,length
+ jmp up
+ int 80h
+ 
+ up:
+    rol al,4
+    mov bl,al
+    and bl,0Fh
+    cmp bl,09h
+    jbe l1
+    add bl,07h
+    int 80h
+l1:
+    add bl,30h
+    move byte[esi],bl
+    inc esi
+    dec byte[count]
+    jnz up    
+    int 80h
+   
+   
+    mov edx,20
+    mov ecx,length
+    mov ebx,1
+    mov eax,4
+    int 80h
+
+   mov eax,01
+   mov ebx,00
+   int 80h
+    

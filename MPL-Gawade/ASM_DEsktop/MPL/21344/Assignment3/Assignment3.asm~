@@ -1,0 +1,84 @@
+section .data
+cnt db 0x4
+
+section .bss
+num resb 20
+num1 resb 20
+con resb 8
+ count resb 8
+count1 resb 8
+
+
+section .text
+ global _start
+ _start:
+ 
+ mov eax,3
+ mov ebx,1
+ mov ecx,num
+ mov edx,20
+ int 80h
+
+ mov eax,4
+ mov ebx,1
+ mov ecx,num
+ mov edx,20
+ int 80h
+
+ jmp atoh
+l2:
+ call a 
+ 
+
+
+ 
+
+  mov eax,1
+  mov ebx,0
+  int 80h
+
+atoh:
+  mov byte[cnt],4h
+
+  mov esi,num
+  mov eax,00h
+h2:
+  rol eax,4
+  cmp byte[esi],9h
+  jb h1
+  sub byte[esi],7h
+h1:
+  sub byte[esi],30h
+  add eax,[esi]
+
+  add esi,1h
+  dec byte[cnt]
+  jnz h2
+  jmp l2
+
+a:
+ mov edi,con
+ mov byte[count],8h
+b: 
+ rol eax,4
+ mov bl,al
+ and bl,0Fh
+ cmp bl,9h
+ jbe l1
+ add bl,7h
+
+ l1:
+ add bl,30h
+ mov byte[edi],bl
+ inc edi
+ dec byte[count]
+ jnz b
+	
+ mov eax,4
+ mov ebx,1
+ mov ecx,con
+ mov edx,8
+ int 80h
+  ret 
+
+  

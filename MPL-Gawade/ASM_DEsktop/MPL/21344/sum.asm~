@@ -1,0 +1,53 @@
+section .data
+n1 db 12h
+n2 db 15h
+msg db "The sum is:",0Ah
+len equ $- msg
+count db 2h
+
+section .bss
+sum resb 2
+length resb 150
+
+section .text
+global _start
+_start:
+	mov esi,length
+	mov al,byte[n1]
+	add al,byte[n2]
+	jmp up
+	int 80h
+	
+	up:
+	rol al,4
+	mov bl,al
+	and bl,0Fh
+	cmp bl,9h
+	jbe l1
+	add bl,7h
+	int 80h
+
+	l1:
+	add bl,30h
+	mov byte[esi],bl
+	inc esi
+	dec byte[count]
+	jnz up
+	int 80h
+
+	mov eax,4
+	mov ebx,1
+	mov ecx,msg
+	mov edx,len
+	int 80h
+	
+	mov eax,4
+	mov ebx,1
+	mov ecx,length
+	mov edx,100
+	int 80h
+
+	mov eax,1
+	mov ebx,0
+	int 80h
+

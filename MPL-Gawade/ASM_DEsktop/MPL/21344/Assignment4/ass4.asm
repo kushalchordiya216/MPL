@@ -1,0 +1,116 @@
+%macro print 2
+mov rax,1
+mov rdi,0
+mov rsi,%1
+mov rdx,%2
+syscall
+%endmacro
+
+%macro read 2
+mov rax,0
+mov rdi,1
+mov rsi,%1
+mov rdx,%2
+syscall
+%endmacro
+
+
+section .data
+cnt db 3
+
+section .bss
+ num1 resb 10
+ con resb 8
+ count resb 8
+ cnth resb 1
+
+
+section .text
+
+global _start:
+
+_start:
+
+   
+   
+   read num1,10
+   print num1,10
+   mov byte[cnth],4h
+   mov rsi,num1
+   call atoh
+   mov byte[num1],al
+
+   xor ax,ax
+   
+  
+   
+   
+   
+   
+   
+  l2:
+    add al,bl;byte[num1]
+    dec byte[cnt]
+    jnz l2
+    
+   ;mov byte[num1],al
+   ;mov al,byte[num1]
+   call a
+   
+   mov rax,60
+   mov rdx,0h
+   syscall
+   
+   
+
+
+a:
+ mov edi,con
+ mov byte[count],8h
+b: 
+ rol eax,4
+ mov bl,al
+ and bl,0Fh
+ cmp bl,9h
+ jbe l1
+ add bl,7h
+
+ l1:
+ add bl,30h
+ mov byte[edi],bl
+ inc edi
+ dec byte[count]
+ jnz b
+	
+ mov eax,4
+ mov ebx,1
+ mov ecx,con
+ mov edx,8
+ int 80h
+  ret 
+  
+  atoh:
+
+	mov esi,num1
+	mov byte[count],2h
+	xor ax,ax
+
+	up1:
+	rol ax,4
+	cmp byte[esi],39h
+	jbe up2
+	sub byte[esi],07h
+	up2:
+	sub byte[esi],30h
+	
+	add al,byte[esi]
+	inc esi 
+	dec byte[count]
+	jnz up1
+	
+	xor dx,dx
+	ret
+
+   
+
+
